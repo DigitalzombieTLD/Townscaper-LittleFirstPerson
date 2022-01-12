@@ -1,0 +1,5 @@
+   UnityEngine.Il2CppAssetBundleManager
+   Copyright 2020 - 2021 Lava Gang
+   
+   This product contains software (https://github.com/LavaGang/UnityEngine.Il2CppAssetBundleManager) developed
+   by Lava Gang, licensed under the Apache-2.0 license.
