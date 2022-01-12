@@ -1,0 +1,67 @@
+Townscaper - LittleFirstPerson mod - v0.8.0 by Digitalzombie
+===========================================================
+
+How to install:
+===============
+1. Download "Melon Loader" by LavaGang:
+https://github.com/LavaGang/MelonLoader/releases/latest/
+
+2. Start the MelonLoader.Installer.exe
+
+2.1. Click "Select" and navigate to your Townscaper folder and select the Townscaper.exe (usually: C:\Program Files(x86)\Steam\steamapps\common\Townscaper\Townscaper.exe)
+
+2.2. Untick the "Latest" checkbox and choose version 0.4.3
+
+2.3. Click install 
+
+2.4. During the installation a "Mods" folder gets created it your game folder. MelonLoader does not(!) change any game files. 
+	 You can uninstall anytime through the installer or by deleting the "version.dll" file.
+
+3. Download the mod (latest release) from: https://github.com/DigitalzombieTLD/Townscaper-LittleFirstPerson/releases/latest/
+
+4. Extract the all files from the "LittleFirstPerson_Release_0.8.0.zip" into your games Mods folder
+
+5. Start the game! 
+
+
+What does it do?
+=================
+Adds first person mode to the game. 
+
+
+How to use?
+=================
+Controls:
+F2 - Enter/Exit first person mode. You will be placed at the position of the mouse cursor
+F3 - While in FPS mode: Toggle build mode to build your town while in first person
+
+WASD - Basic movement
+Space- Jump
+Q - Zoom
+Shift - Sprint
+
+
+Known issues
+=================
+Jumping needs more more work!
+
+
+Credits
+=================
+Keep yourself up to date on the progress on:
+https://www.youtube.com/c/DigitalzombieDev
+
+Thanks to:
+LavaGang for MelonLoader
+
+ThirdParty  code:
+Il2Cpp Asset Bundle Manager
+https://github.com/LavaGang/UnityEngine.Il2CppAssetBundleManager
+Licensed under the Apache License, Version 2.0
+
+LittleFirstPerson is licensed under Apache License, Version 2.0
+
+
+Changelog:
+==========
+0.8.0 	- First release
