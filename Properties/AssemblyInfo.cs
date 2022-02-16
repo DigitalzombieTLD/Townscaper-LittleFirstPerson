@@ -7,7 +7,7 @@ using LittleFirstPerson;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: MelonInfo(typeof(LittleFirstPersonMain), "LittleFirstPerson", "0.8.0", "Digitalzombie", "")]
+[assembly: MelonInfo(typeof(LittleFirstPersonMain), "Little FirstPerson", "0.9.2", "Digitalzombie", "")]
 [assembly: MelonGame("Raw Fury", "Townscaper")]
 [assembly: AssemblyTitle("LittleFirstPerson")]
 [assembly: AssemblyDescription("FirstPerson mod for Townscaper")]

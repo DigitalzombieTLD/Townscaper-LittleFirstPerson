@@ -1,10 +1,4 @@
-﻿// CHANGE LOG
-// 
-// CHANGES || version VERSION
-//
-// "Enable/Disable Headbob, Changed look rotations - should result in reduced camera jitters" || version 1.0.1
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,17 +11,16 @@ namespace LittleFirstPerson
 	{
 		private Rigidbody rb;
 
-		public Camera playerCamera;
-
-		public float fov = 60f;
 		public bool invertCamera = false;
 		public bool cameraCanMove = true;
 		public float mouseSensitivity = 2f;
 		public float maxLookAngle = 89f;
 
+		public bool onWater;
+		public bool isFlying;
+
 		// Crosshair
 		public bool lockCursor = true;
-		public bool crosshair = true;
 		public Sprite crosshairImage;
 		public Color crosshairColor = Color.white;
 
@@ -36,10 +29,9 @@ namespace LittleFirstPerson
 		private float pitch = 0.0f;
 		private Image crosshairObject;
 
-
 		public bool enableZoom = true;
 		public bool holdToZoom = false;
-		public KeyCode zoomKey = KeyCode.Q;
+
 		public float zoomFOV = 30f;
 		public float zoomStepTime = 5f;
 
@@ -57,43 +49,35 @@ namespace LittleFirstPerson
 
 		public bool enableSprint = true;
 		public bool unlimitedSprint = false;
-		public KeyCode sprintKey = KeyCode.LeftShift;
-		public float sprintSpeed = 3.5f;
+
+
 		public float sprintDuration = 60f;
 		public float sprintCooldown = .1f;
-		public float sprintFOV = 70f;
+
 		public float sprintFOVStepTime = 10f;
 
 		// Jetpack
-		public float jetpackThrust = 10f;
+
 		public Vector3 velocity;
 
 		// Internal Variables		
-		private bool isSprinting = false;
-		private float sprintRemaining;		
-		private bool isSprintCooldown = false;
-		private float sprintCooldownReset;
-
-
-		public bool enableJump = true;
-		public KeyCode jumpKey = KeyCode.Space;
-		public float jumpPower = 5f;
+		private bool isSprinting = false;	
+		public float jumpPower = 0.5f;
 
 		// Internal Variables
 		private bool isGrounded = false;
 		
-		private Vector3 originalScale;
 
-
-		public bool enableHeadBob = true;
 		public Transform joint;
+		public Vector3 originalScale;
+
 		public float bobSpeed = 5f;
 		public Vector3 bobAmount = new Vector3(.15f, .05f, 0f);
 
 		// Internal Variables
 		private Vector3 jointOriginalPos;
 		private float timer = 0;
-
+		
 
 		public FirstPersonController(IntPtr intPtr) : base(intPtr) { }
 
@@ -102,33 +86,37 @@ namespace LittleFirstPerson
 			rb = GetComponent<Rigidbody>();
 
 			crosshairObject = GetComponentInChildren<Image>();
-			playerCamera = GetComponentInChildren<Camera>();
+			//MyModUI.fpsCam = GetComponentInChildren<Camera>();
+			MyModUI.fpsCam = LittleFirstPersonMain.fpsCamera;
 			joint = this.transform.GetChild(0);
 
 			// Set internal variables
-			playerCamera.fieldOfView = fov;
 			originalScale = transform.localScale;
 			jointOriginalPos = joint.localPosition;
-		}
 
-		void Start()
-		{
-			if (crosshair)
+			MyModUI.crosshairObject = crosshairObject.gameObject;
+			crosshairObject.sprite = crosshairImage;
+			crosshairObject.color = crosshairColor;
+
+			if (InputMain.pointerEnabled)
 			{
-				crosshairObject.sprite = crosshairImage;
-				crosshairObject.color = crosshairColor;
+				crosshairObject.gameObject.SetActive(true);
 			}
 			else
 			{
 				crosshairObject.gameObject.SetActive(false);
-			}			
+			}
 		}
 
+		private void Start()
+		{
+
+		}
+
+	
 		private void Update()
 		{
 			// Control camera movement
-			if (cameraCanMove)
-			{
 				yaw = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * mouseSensitivity;
 
 				if (!invertCamera)
@@ -145,93 +133,38 @@ namespace LittleFirstPerson
 				pitch = Mathf.Clamp(pitch, -maxLookAngle, maxLookAngle);
 
 				transform.localEulerAngles = new Vector3(0, yaw, 0);
-				playerCamera.transform.localEulerAngles = new Vector3(pitch, 0, 0);
-			}
+				MyModUI.fpsCam.transform.localEulerAngles = new Vector3(pitch, 0, 0);
+			
 
-			if (enableZoom)
-			{
+			
 				// Changes isZoomed when key is pressed
 				// Behavior for toogle zoom
-				if (Input.GetKeyDown(zoomKey) && !holdToZoom && !isSprinting)
-				{
-					if (!isZoomed)
-					{
-						isZoomed = true;
-					}
-					else
-					{
-						isZoomed = false;
-					}
+				if (Input.GetKeyDown(InputMain.zoom))
+				{					
+						isZoomed = !isZoomed;
 				}
 
-				// Changes isZoomed when key is pressed
-				// Behavior for hold to zoom
-				if (holdToZoom && !isSprinting)
-				{
-					if (Input.GetKeyDown(zoomKey))
-					{
-						isZoomed = true;
-					}
-					else if (Input.GetKeyUp(zoomKey))
-					{
-						isZoomed = false;
-					}
-				}
+		
 
 				// Lerps camera.fieldOfView to allow for a smooth transistion
-				if (isZoomed)
+				if (isZoomed && !isSprinting)
 				{
-					playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, zoomFOV, zoomStepTime * Time.deltaTime);
-				}
-				else if (!isZoomed && !isSprinting)
-				{
-					playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, fov, zoomStepTime * Time.deltaTime);
-				}
-			}
-
-			if (enableSprint)
-			{
-				if (isSprinting)
-				{
-					isZoomed = false;
-					playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, sprintFOV, sprintFOVStepTime * Time.deltaTime);
-
-					// Drain sprint remaining while sprinting
-					if (!unlimitedSprint)
-					{
-						sprintRemaining -= 1 * Time.deltaTime;
-						if (sprintRemaining <= 0)
-						{
-							isSprinting = false;
-							isSprintCooldown = true;
-						}
-					}
-				}
-				else
-				{
-					// Regain sprint while not sprinting
-					sprintRemaining = Mathf.Clamp(sprintRemaining += 1 * Time.deltaTime, 0, sprintDuration);
+					MyModUI.fpsCam.fieldOfView = Mathf.Lerp(MyModUI.fpsCam.fieldOfView, zoomFOV, zoomStepTime * Time.deltaTime);
 				}
 
-				// Handles sprint cooldown 
-				// When sprint remaining == 0 stops sprint ability until hitting cooldown
-				if (isSprintCooldown)
-				{
-					sprintCooldown -= 1 * Time.deltaTime;
-					if (sprintCooldown <= 0)
-					{
-						isSprintCooldown = false;
-					}
+				if(isSprinting)
+				{					
+					MyModUI.fpsCam.fieldOfView = Mathf.Lerp(MyModUI.fpsCam.fieldOfView, InputMain.sprintFOV, sprintFOVStepTime * Time.deltaTime);
 				}
-				else
-				{
-					sprintCooldown = sprintCooldownReset;
-				}				
-			}
 
+				if (!isZoomed && !isSprinting)
+				{
+					MyModUI.fpsCam.fieldOfView = Mathf.Lerp(MyModUI.fpsCam.fieldOfView, InputMain.cameraFOV, zoomStepTime * Time.deltaTime);
+				}			
+						
 			CheckGround();
 
-			if (enableHeadBob)
+			if (InputMain.headbobEnabled)
 			{
 				HeadBob();
 			}
@@ -242,11 +175,38 @@ namespace LittleFirstPerson
 			if (playerCanMove)
 			{
 				// Calculate how fast we should be moving
-				Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Forward"));
+				//Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Forward"));
+				if (Input.GetKey(InputMain.forward))
+				{
+					LittleFirstPersonMain.currentVelocity.z = LittleFirstPersonMain.maxVelocity.z;
+				}
+				else if (Input.GetKey(InputMain.back))
+				{
+					LittleFirstPersonMain.currentVelocity.z = LittleFirstPersonMain.minVelocity.z;
+				}
+				else
+				{
+					LittleFirstPersonMain.currentVelocity.z = 0;
+				}
+
+				if (Input.GetKey(InputMain.left))
+				{
+					LittleFirstPersonMain.currentVelocity.x = LittleFirstPersonMain.minVelocity.x;
+				}
+				else if (Input.GetKey(InputMain.right))
+				{
+					LittleFirstPersonMain.currentVelocity.x = LittleFirstPersonMain.maxVelocity.x;
+				}
+				else
+				{
+					LittleFirstPersonMain.currentVelocity.x = 0;
+				}
+
+				//Vector3 targetVelocity = LittleFirstPersonMain.currentVelocity;
 
 				// Checks if player is walking and isGrounded
 				// Will allow head bob
-				if (targetVelocity.x != 0 || targetVelocity.z != 0 && isGrounded)
+				if (LittleFirstPersonMain.currentVelocity.x != 0 || LittleFirstPersonMain.currentVelocity.z != 0 && isGrounded)
 				{
 					isWalking = true;
 				}
@@ -255,14 +215,57 @@ namespace LittleFirstPerson
 					isWalking = false;
 				}
 
-				// All movement calculations shile sprint is active
-				if (enableSprint && Input.GetKey(sprintKey) && sprintRemaining > 0f && !isSprintCooldown)
+
+				if(isGrounded && isWalking && InputMain.footstepAudio)
 				{
-					targetVelocity = transform.TransformDirection(targetVelocity) * sprintSpeed;
+					if (!isSprinting)
+					{
+						if(!onWater)
+						{
+							AudioMain.PlayRepeat("WALK01_TILE");
+						}
+						else
+						{
+							AudioMain.PlayRepeat("WALK01_WATER");
+						}
+						
+					}
+					else if(isSprinting)
+					{
+						if (!onWater)
+						{
+							AudioMain.PlayRepeat("RUN01_TILE");
+						}
+						else
+						{
+							AudioMain.PlayRepeat("RUN01_WATER");
+						}
+					}
+					else
+					{
+						AudioMain.StopPlay();
+					}
+				}
+				else
+				{
+					if(isFlying && InputMain.jetpackAudio)
+					{
+						AudioMain.PlayRepeat("JETPACK");
+					}
+					else
+					{
+						AudioMain.StopPlay();
+					}					
+				}
+
+				// All movement calculations shile sprint is active
+				if (Input.GetKey(InputMain.sprint))
+				{
+					LittleFirstPersonMain.currentVelocity = transform.TransformDirection(LittleFirstPersonMain.currentVelocity) * InputMain.sprintSpeed;
 
 					// Apply a force that attempts to reach our target velocity
 					Vector3 velocity = rb.velocity;
-					Vector3 velocityChange = (targetVelocity - velocity);
+					Vector3 velocityChange = (LittleFirstPersonMain.currentVelocity - velocity);
 					velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
 					velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
 					velocityChange.y = 0;
@@ -279,13 +282,13 @@ namespace LittleFirstPerson
 				// All movement calculations while walking
 				else
 				{
-					isSprinting = false;					
+					isSprinting = false;
 
-					targetVelocity = transform.TransformDirection(targetVelocity) * walkSpeed;
+					LittleFirstPersonMain.currentVelocity = transform.TransformDirection(LittleFirstPersonMain.currentVelocity) * walkSpeed;
 
 					// Apply a force that attempts to reach our target velocity
 					Vector3 velocity = rb.velocity;
-					Vector3 velocityChange = (targetVelocity - velocity);
+					Vector3 velocityChange = (LittleFirstPersonMain.currentVelocity - velocity);
 					velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
 					velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
 					velocityChange.y = 0;
@@ -293,14 +296,17 @@ namespace LittleFirstPerson
 					rb.AddForce(velocityChange, ForceMode.VelocityChange);
 				}
 
-
-				// Gets input and calls jump method
-				//if (enableJump && Input.GetKeyDown(jumpKey) && isGrounded)
-				if (enableJump && Input.GetKeyDown(jumpKey))
+				if (Input.GetKey(InputMain.jump))
 				{					
-					Jump();
-					//Jetpack();
+					Jetpack();
 				}
+				else
+				{
+					if(isFlying)
+					{
+						AudioMain.StopPlay();
+					}
+				}				
 			}
 		}
 
@@ -312,45 +318,33 @@ namespace LittleFirstPerson
 			float distance = .75f;
 
 			if (Physics.Raycast(origin, direction, out RaycastHit hit, distance))
-			{
-				Debug.DrawRay(origin, direction * distance, Color.red);
+			{				
 				isGrounded = true;
+				isFlying = false;
+
+				if (hit.collider.gameObject.name == "GroundBoxCollider")
+				{
+					onWater = true;
+				}
+				else
+				{
+					onWater = false;
+				}
 			}
 			else
 			{
 				isGrounded = false;
+				//isFlying = true;
 			}
-		}
-
-		private void Jump()
-		{
-			// Adds force to the player rigidbody to jump
-			if (isGrounded)
-			{
-				rb.AddForce(0f, jumpPower, 0f, ForceMode.Impulse);
-				isGrounded = false;
-			}
-			else
-			{
-				Jetpack();
-			}
-
-			// When crouched and using toggle system, will uncrouch for a jump
-			/*if (isCrouched && !holdToCrouch)
-			{
-				Crouch();
-			}*/
 		}
 
 		private void Jetpack()
 		{
-			rb.AddForce(0f, jetpackThrust-4, 0f, ForceMode.Impulse);
+			rb.AddForce(0f, InputMain.jetpackPower, 0f, ForceMode.VelocityChange);
 			isGrounded = false;
-			//rb.AddRelativeForce(Vector3.up * jetpackThrust);
-			//isGrounded = false;
+			isFlying = true;
 		}
 				
-
 		private void HeadBob()
 		{
 			if (isWalking)
@@ -358,7 +352,7 @@ namespace LittleFirstPerson
 				// Calculates HeadBob speed during sprint
 				if (isSprinting)
 				{
-					timer += Time.deltaTime * (bobSpeed + sprintSpeed);
+					timer += Time.deltaTime * (bobSpeed + InputMain.sprintSpeed);
 				}				
 				// Calculates HeadBob speed during walking
 				else

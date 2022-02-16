@@ -4,7 +4,7 @@ using UnhollowerRuntimeLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Runtime.InteropServices;
-
+using ModUI;
 
 namespace LittleFirstPerson
 {
@@ -19,17 +19,15 @@ namespace LittleFirstPerson
 		public static Camera originalCamera;
 		public static Camera fpsCamera;
 
-		public static GameObject skyboxObject;
-		public static GameObject skyboxCameraObject;
-		public static GameObject orbitalCameraObject;
+		public static Vector3 maxVelocity = new Vector3(1, 0, 1);
+		public static Vector3 currentVelocity = new Vector3(0, 0, 0);
+		public static Vector3 minVelocity = new Vector3(-1, 0, -1);
 
-		//[DllImport("user32.dll")]
-		//static extern bool SetCursorPos(int X, int Y);
+		public static ModSettings myModSettings;
 
 		public override void OnApplicationStart()
 		{
 			ClassInjector.RegisterTypeInIl2Cpp<FirstPersonController>();
-
 
 			MelonLogger.Msg("Loading assetbundle ...");
 			littleFirstPersonBundle = Il2CppAssetBundleManager.LoadFromFile("Mods\\LittleFirstPersonBundle.unity3d");
@@ -38,10 +36,6 @@ namespace LittleFirstPerson
 			{
 				MelonLogger.Msg("Failed to load assetbundle: \"LittleFirstPersonBundle.unity3d\"");
 				return;
-			}
-			else
-			{
-				
 			}
 		}
 
@@ -53,25 +47,17 @@ namespace LittleFirstPerson
 				if(!fpsPlayerPrefab)
 				{
 					fpsPlayerPrefab = littleFirstPersonBundle.LoadAsset<GameObject>("FPS");
+					AudioMain.LoadAudioFromBundle();
+
 					UnityEngine.Object.DontDestroyOnLoad(fpsPlayerPrefab);
-				}
+					MyModUI.Initialize(this);
+				}				
 			}			
 		}
 		
 		public override void OnUpdate()
 		{
 			InputMain.GetInput();
-
-			if(fpsActive)
-			{
-				//Cursor.visible = false;
-				//Cursor.lockState = CursorLockMode.Locked;
-				//var mousePos = Input.mousePosition;
-				//mousePos.x -= Screen.width / 2;
-				//mousePos.y -= Screen.height / 2;
-
-				//SetCursorPos(Screen.width / 2, Screen.height / 2);
-			}
 		}
 
 		public static IEnumerator DisableCursor()

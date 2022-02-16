@@ -52,6 +52,10 @@
       <HintPath>G:\Games\Steam\steamapps\common\Townscaper\MelonLoader\MelonLoader.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ModUI">
+      <HintPath>G:\Games\Steam\steamapps\common\Townscaper\Mods\ModUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Rewired_Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <Private>False</Private>
     </Reference>
@@ -122,11 +126,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FirstPersonController.cs" />
+    <Compile Include="Audio.cs" />
+    <Compile Include="MyModUI.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Harmony.cs" />
-    <Compile Include="IL2CPP\Il2CppAssetBundle.cs" />
-    <Compile Include="IL2CPP\Il2CppAssetBundleManager.cs" />
-    <Compile Include="IL2CPP\Il2CppAssetBundleRequest.cs" />
     <Compile Include="LittleFirstPerson.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
