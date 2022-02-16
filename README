@@ -1,5 +1,11 @@
-Townscaper - LittleFirstPerson mod - v0.8.0 by Digitalzombie
-===========================================================
+Townscaper - LittleFirstPerson mod - v0.9.2 by Digitalzombie
+=============================================================
+
+[IMPORTANT!!!]
+This mod requires to install the "ModUI" utility mod -> https://github.com/DigitalzombieTLD/TownscaperModUI/releases/latest
+Download and extract the zip into your mods folder. 
+[/IMPORTANT!!!]
+
 
 How to install:
 ===============
@@ -19,7 +25,11 @@ https://github.com/LavaGang/MelonLoader/releases/latest/
 
 3. Download the mod (latest release) from: https://github.com/DigitalzombieTLD/Townscaper-LittleFirstPerson/releases/latest/
 
-4. Extract the all files from the "LittleFirstPerson_Release_0.8.0.zip" into your games Mods folder
+4. Extract the all files from the "LittleFirstPerson_Release_0.9.2.zip" into your games Mods folder
+
+5. Download the utility mod "ModUI" (latest release) from: https://github.com/DigitalzombieTLD/TownscaperModUI/releases/latest/
+
+4. Extract the all files from the ModUI download into your games Mods folder
 
 5. Start the game! 
 
@@ -31,7 +41,7 @@ Adds first person mode to the game.
 
 How to use?
 =================
-Controls:
+Default controls:
 F2 - Enter/Exit first person mode. You will be placed at the position of the mouse cursor
 F3 - While in FPS mode: Toggle build mode to build your town while in first person
 
@@ -39,11 +49,6 @@ WASD - Basic movement
 Space- Jump
 Q - Zoom
 Shift - Sprint
-
-
-Known issues
-=================
-Jumping needs more more work!
 
 
 Credits
@@ -64,4 +69,12 @@ LittleFirstPerson is licensed under Apache License, Version 2.0
 
 Changelog:
 ==========
-0.8.0 	- First release
+0.9.2
+- Say goodbye to jumping, say hello to your new jetpack
+- Now with UI for different customization settings
+- Added footstep sound effects
+- A few smaller bugfixes
+
+
+0.8.0
+- First release
