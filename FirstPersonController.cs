@@ -40,7 +40,6 @@ namespace LittleFirstPerson
 
 
 		public bool playerCanMove = true;
-		public float walkSpeed = 1.2f;
 		public float maxVelocityChange = 3f;
 
 		// Internal Variables
@@ -284,7 +283,7 @@ namespace LittleFirstPerson
 				{
 					isSprinting = false;
 
-					LittleFirstPersonMain.currentVelocity = transform.TransformDirection(LittleFirstPersonMain.currentVelocity) * walkSpeed;
+					LittleFirstPersonMain.currentVelocity = transform.TransformDirection(LittleFirstPersonMain.currentVelocity) * InputMain.walkSpeed;
 
 					// Apply a force that attempts to reach our target velocity
 					Vector3 velocity = rb.velocity;

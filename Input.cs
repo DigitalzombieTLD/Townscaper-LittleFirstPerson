@@ -26,6 +26,7 @@ namespace LittleFirstPerson
 
 		public static float jetpackPower;
 		public static float sprintSpeed;
+		public static float walkSpeed;
 		public static float cameraFOV;
 		public static float sprintFOV;
 		public static bool headbobEnabled;

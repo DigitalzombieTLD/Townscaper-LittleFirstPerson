@@ -34,6 +34,8 @@ namespace LittleFirstPerson
 			myModSettings.AddKeybind("Sprint", "Movement", KeyCode.LeftShift, new Color32(230, 70, 20, 255));
 			myModSettings.AddSlider("Sprint Speed", "Movement", new Color32(230, 70, 20, 255), 2f, 6f, false, 2.0f, new Action<float>(delegate (float value) { UpdateValues(); }));
 
+			myModSettings.AddSlider("Walk Speed", "Movement", new Color32(230, 70, 20, 255), 0.2f, 6f, false, 1.0f, new Action<float>(delegate (float value) { UpdateValues(); }));
+
 			myModSettings.AddKeybind("Jetpack", "Movement", KeyCode.Space, new Color32(200, 70, 164, 255));
 			myModSettings.AddSlider("Jetpack Power", "Movement", new Color32(200, 70, 164, 255), 0.1f, 0.8f, false, 0.35f, new Action<float>(delegate (float value) { UpdateValues(); }));
 			myModSettings.AddToggle("Jetpack Audio", "Audio", new Color32(200, 70, 164, 255), true, new Action<bool>(delegate (bool value) { UpdateValues(); }));				
@@ -65,6 +67,7 @@ namespace LittleFirstPerson
 
 			myModSettings.GetValueFloat("Jetpack Power", "Movement", out InputMain.jetpackPower);
 			myModSettings.GetValueFloat("Sprint Speed", "Movement", out InputMain.sprintSpeed);
+			myModSettings.GetValueFloat("Walk Speed", "Movement", out InputMain.walkSpeed);
 			myModSettings.GetValueFloat("Normal FOV", "Camera", out InputMain.cameraFOV);
 			myModSettings.GetValueFloat("Sprint FOV", "Camera", out InputMain.sprintFOV);
 			myModSettings.GetValueBool("Headbob", "Camera", out InputMain.headbobEnabled);
