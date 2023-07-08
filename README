@@ -1,4 +1,4 @@
-Townscaper - LittleFirstPerson mod - v0.9.2 by Digitalzombie
+Townscaper - LittleFirstPerson mod - v1.0.0 by Digitalzombie
 =============================================================
 
 [IMPORTANT!!!]
@@ -16,7 +16,7 @@ https://github.com/LavaGang/MelonLoader/releases/latest/
 
 2.1. Click "Select" and navigate to your Townscaper folder and select the Townscaper.exe (usually: C:\Program Files(x86)\Steam\steamapps\common\Townscaper\Townscaper.exe)
 
-2.2. Untick the "Latest" checkbox and choose version 0.4.3
+2.2. **Untick the "Latest" checkbox and choose version 0.5.7**
 
 2.3. Click install 
 
@@ -25,7 +25,7 @@ https://github.com/LavaGang/MelonLoader/releases/latest/
 
 3. Download the mod (latest release) from: https://github.com/DigitalzombieTLD/Townscaper-LittleFirstPerson/releases/latest/
 
-4. Extract the all files from the "LittleFirstPerson_Release_0.9.2.zip" into your games Mods folder
+4. Extract the all files from the "LittleFirstPerson_Release_1.0.0.zip" into your games Mods folder
 
 5. Download the utility mod "ModUI" (latest release) from: https://github.com/DigitalzombieTLD/TownscaperModUI/releases/latest/
 
@@ -37,6 +37,7 @@ https://github.com/LavaGang/MelonLoader/releases/latest/
 What does it do?
 =================
 Adds first person mode to the game. 
+Don't forget to check out the settings (hover with the mousecursor over the top left corner of the gamescreen)
 
 
 How to use?
@@ -69,6 +70,10 @@ LittleFirstPerson is licensed under Apache License, Version 2.0
 
 Changelog:
 ==========
+1.0.0
+- Update for latest game version
+- Integrated unity3d file into dll
+
 0.9.2
 - Say goodbye to jumping, say hello to your new jetpack
 - Now with UI for different customization settings
