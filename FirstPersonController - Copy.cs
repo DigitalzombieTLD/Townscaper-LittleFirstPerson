@@ -1,5 +1,4 @@
-﻿using MelonLoader;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,8 +7,7 @@ using UnityEngine.UI;
 
 namespace LittleFirstPerson
 {
-    [RegisterTypeInIl2Cpp]
-    public class FirstPersonController : MonoBehaviour
+	public class FirstPersonController : MonoBehaviour
 	{
 		private Rigidbody rb;
 

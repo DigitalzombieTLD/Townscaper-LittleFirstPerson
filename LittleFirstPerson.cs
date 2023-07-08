@@ -1,10 +1,9 @@
 ﻿using MelonLoader;
 using System.Collections;
-using UnhollowerRuntimeLib;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using System.Runtime.InteropServices;
 using ModUI;
+using System.Reflection;
+using System.IO;
 
 namespace LittleFirstPerson
 {
@@ -25,19 +24,10 @@ namespace LittleFirstPerson
 
 		public static ModSettings myModSettings;
 
-		public override void OnApplicationStart()
+		public override void OnInitializeMelon()
 		{
-			ClassInjector.RegisterTypeInIl2Cpp<FirstPersonController>();
-
-			MelonLogger.Msg("Loading assetbundle ...");
-			littleFirstPersonBundle = Il2CppAssetBundleManager.LoadFromFile("Mods\\LittleFirstPersonBundle.unity3d");
-
-			if (littleFirstPersonBundle == null)
-			{
-				MelonLogger.Msg("Failed to load assetbundle: \"LittleFirstPersonBundle.unity3d\"");
-				return;
-			}
-		}
+			LoadEmbeddedAssetBundle();
+        }
 
 
 		public override void OnSceneWasLoaded(int buildIndex, string sceneName)
@@ -72,5 +62,15 @@ namespace LittleFirstPerson
 			}
 
 		}
-	}
+
+        public static void LoadEmbeddedAssetBundle()
+        {
+            MemoryStream memoryStream;
+            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("LittleFirstPerson.Resources.LittleFirstPersonBundle");
+            memoryStream = new MemoryStream((int)stream.Length);
+            stream.CopyTo(memoryStream);
+
+            littleFirstPersonBundle = Il2CppAssetBundleManager.LoadFromMemory(memoryStream.ToArray());
+        }
+    }
 }
